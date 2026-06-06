@@ -125,12 +125,16 @@ int main(int argc, char *argv[]) {
     int height = DEFAULT_HEIGHT;
     int max_iter = DEFAULT_MAX_ITER;
     const char *output_file = DEFAULT_OUTPUT;
+    int block_x = 16;
+    int block_y = 16;
 
     /* Parse command line arguments if provided */
     if (argc > 1) width = atoi(argv[1]);
     if (argc > 2) height = atoi(argv[2]);
     if (argc > 3) max_iter = atoi(argv[3]);
     if (argc > 4) output_file = argv[4];
+    if (argc > 5) block_x = atoi(argv[5]);
+    if (argc > 6) block_y = atoi(argv[6]);
 
     printf("====================================================\n");
     printf("Mandelbrot Parallel Implementation (CUDA GPU)\n");
@@ -156,7 +160,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* Define CUDA execution configuration: 2D Block and 2D Grid */
-    dim3 block_dim(16, 16);
+    dim3 block_dim(block_x, block_y);
     dim3 grid_dim((width + block_dim.x - 1) / block_dim.x, 
                   (height + block_dim.y - 1) / block_dim.y);
 
