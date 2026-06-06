@@ -227,3 +227,17 @@ To verify that the parallel OpenMP, MPI, and CUDA implementations are mathematic
   md5sum mandelbrot_serial.pgm omp_t16.pgm mpi_p16.pgm cuda_16x16.pgm
   ```
   *Expected Output:* Identical hash strings for all files.
+
+---
+
+## 6. AI Citation & Academic Integrity
+
+In accordance with the course academic integrity guidelines, AI assistance (Google Gemini) was utilized during the development of this project:
+- **Dynamic Blocks (CUDA)**: Refactored the kernel execution configuration in mandelbrot_cuda.cu to parse block size parameters dynamically from command-line arguments rather than hardcoded definitions.
+- **Process Scaling (MPI)**: Diagnosed the OpenMPI process limit warnings on virtual environments and added the --oversubscribe flag instructions for Linux runs.
+- **Documentation**: Assisted in formatting compilation/run guides and verification methods.
+
+### Prompts Used:
+1. *"How do I parse block_x and block_y parameters dynamically in a CUDA C program instead of using a hardcoded block size?"*
+2. *"Why does my MPI execution crash on a 2-core Ubuntu server when I specify -np 16, and how do I fix it?"*
+3. *"Write a step-by-step setup guide for compilation and manual execution of OpenMP, MPI, and CUDA Mandelbrot set implementations on both Windows and Ubuntu."*
