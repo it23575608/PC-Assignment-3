@@ -1,6 +1,6 @@
 # Mandelbrot Set Parallelization Project (SE3082 - Parallel Computing)
 
-This repository contains parallel implementations of the Mandelbrot set algorithm across different computing paradigms: **OpenMP (Shared Memory)**, **MPI (Distributed Memory)**, and **CUDA (Massively Parallel GPU)**.
+This repository contains parallel implementations of the Mandelbrot set algorithm across different computing paradigms: **Serial (Reference)**, **OpenMP (Shared Memory)**, **MPI (Distributed Memory)**, and **CUDA (Massively Parallel GPU)**.
 
 ---
 
@@ -8,6 +8,9 @@ This repository contains parallel implementations of the Mandelbrot set algorith
 
 ```
 /mandelbrot_project
+  ├── /serial/                # Serial Reference Implementation
+  │     ├── mandelbrot_serial.c
+  │     └── Makefile
   ├── /openmp/                # OpenMP Implementation (Shared Memory)
   │     ├── mandelbrot_openmp.c
   │     └── Makefile
@@ -53,7 +56,15 @@ To build and run these programs on Windows, configure the following:
 
 Each directory contains a custom `Makefile` supporting compilation with optimal optimization flags (`-O3 -Wall -Wextra`).
 
-### A. Compiling the OpenMP Version
+### A. Compiling the Serial Baseline
+```bash
+cd serial
+make
+cd ..
+```
+*Output binary:* `serial/mandelbrot_serial` (or `mandelbrot_serial.exe` on Windows).
+
+### B. Compiling the OpenMP Version
 ```bash
 cd openmp
 make
@@ -61,7 +72,7 @@ cd ..
 ```
 *Output binary:* `openmp/mandelbrot_openmp` (or `mandelbrot_openmp.exe` on Windows).
 
-### B. Compiling the MPI Version
+### C. Compiling the MPI Version
 ```bash
 cd mpi
 make
@@ -69,7 +80,7 @@ cd ..
 ```
 *Output binary:* `mpi/mandelbrot_mpi` (or `mandelbrot_mpi.exe` on Windows).
 
-### C. Compiling the CUDA Version
+### D. Compiling the CUDA Version
 ```bash
 cd cuda
 make
@@ -87,7 +98,13 @@ All implementations share a standardized syntax structure:
 ```
 *Default params (if none provided):* Width = `1600`, Height = `1200`, Iterations = `1000`.
 
-### A. Running OpenMP (Varying Thread Counts)
+### A. Running the Serial Baseline
+Execute sequentially on a single thread:
+```bash
+./serial/mandelbrot_serial 4000 3000 1000 mandelbrot_serial.pgm
+```
+
+### B. Running OpenMP (Varying Thread Counts)
 Control the number of active OpenMP worker threads by setting the `OMP_NUM_THREADS` environment variable prefix before launching:
 
 * **On Linux / macOS:**
@@ -119,7 +136,7 @@ Control the number of active OpenMP worker threads by setting the `OMP_NUM_THREA
 
 ---
 
-### B. Running MPI (Varying Process/Rank Counts)
+### C. Running MPI (Varying Process/Rank Counts)
 Run using `mpirun` or `mpiexec` specifying the rank size with `-np`. 
 
 > [!IMPORTANT]
@@ -154,7 +171,7 @@ Run using `mpirun` or `mpiexec` specifying the rank size with `-np`.
 
 ---
 
-### C. Running CUDA (Varying Block Dimensions)
+### D. Running CUDA (Varying Block Dimensions)
 The CUDA implementation accepts dynamic block dimensions X and Y as the **5th and 6th command-line arguments**.
 
 ```bash
@@ -186,25 +203,27 @@ The CUDA implementation accepts dynamic block dimensions X and Y as the **5th an
 
 ## 5. Correctness and Output Verification
 
-To verify that the parallel OpenMP, MPI, and CUDA implementations are mathematically correct and functionally identical to each other:
+To verify that the parallel OpenMP, MPI, and CUDA implementations are mathematically correct and functionally identical to the reference sequential baseline:
 
 1. Run the benchmarks with the same parameters (e.g. resolution $4000 \times 3000$ and $1000$ iterations).
-2. Compare the output binary PGM files using a byte-by-byte comparison utility to ensure mathematical consistency.
+2. Compare the output binary PGM files using a byte-by-byte comparison utility.
 
 * **On Windows (PowerShell / Command Prompt):**
   ```cmd
-  fc /b omp_t16.pgm mpi_p16.pgm
-  fc /b omp_t16.pgm cuda_16x16.pgm
+  fc /b mandelbrot_serial.pgm omp_t16.pgm
+  fc /b mandelbrot_serial.pgm mpi_p16.pgm
+  fc /b mandelbrot_serial.pgm cuda_16x16.pgm
   ```
   *Expected Output:* `FC: no differences encountered`
 
 * **On Linux / macOS (Terminal):**
   ```bash
-  diff omp_t16.pgm mpi_p16.pgm
-  diff omp_t16.pgm cuda_16x16.pgm
+  diff mandelbrot_serial.pgm omp_t16.pgm
+  diff mandelbrot_serial.pgm mpi_p16.pgm
+  diff mandelbrot_serial.pgm cuda_16x16.pgm
   ```
   *Expected Output:* (No text output, representing a perfect match) or verify via checksums:
   ```bash
-  md5sum omp_t16.pgm mpi_p16.pgm cuda_16x16.pgm
+  md5sum mandelbrot_serial.pgm omp_t16.pgm mpi_p16.pgm cuda_16x16.pgm
   ```
   *Expected Output:* Identical hash strings for all files.
