@@ -1,0 +1,5 @@
+Implementation,ExecutionTime_s,Speedup
+Serial,5.652,1.0
+OpenMP (16 Threads),0.442,12.787330316742082
+MPI (16 Ranks),0.52,10.86923076923077
+CUDA (16x16 Block),0.045,125.60000000000001
